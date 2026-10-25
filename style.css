@@ -46,7 +46,7 @@ img { display: block; width: 100%; height: auto; background: #e4e2dc; }
   letter-spacing: .04em;
   margin-bottom: 6px;
 }
-.tile img { aspect-ratio: 4 / 5; object-fit: cover; }
+.tile img, .tile video { display: block; width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; background: #e4e2dc; }
 
 /* project page */
 .intro {
