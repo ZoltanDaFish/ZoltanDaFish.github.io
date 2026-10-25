@@ -1,0 +1,102 @@
+:root {
+  --bg: #f3f2ee;
+  --fg: #111;
+  --muted: #777;
+  --gap: 16px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font: 14px/1.45 "Helvetica Neue", Helvetica, Arial, sans-serif;
+  padding: 0 var(--gap) 64px;
+}
+
+a { color: inherit; text-decoration: none; }
+a:hover { color: var(--muted); }
+img { display: block; width: 100%; height: auto; background: #e4e2dc; }
+
+/* header */
+.top {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--gap);
+  padding: var(--gap) 0;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  line-height: 1.3;
+}
+.top nav { display: flex; gap: 24px; }
+.top nav a[aria-current] { color: var(--muted); }
+
+/* home grid */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 48px var(--gap);
+  margin-top: 18vh;
+}
+.tile span {
+  display: block;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  margin-bottom: 6px;
+}
+.tile img { aspect-ratio: 4 / 5; object-fit: cover; }
+
+/* project page */
+.intro {
+  max-width: 640px;
+  margin: 12vh 0 64px;
+}
+.intro h1 { font-size: 28px; font-weight: 500; line-height: 1.15; margin-bottom: 12px; }
+.intro p + p { margin-top: 8px; }
+.meta { color: var(--muted); }
+
+figure { margin-bottom: 56px; }
+figcaption { max-width: 640px; margin-top: 10px; color: var(--muted); }
+
+.row {
+  display: grid;
+  grid-template-columns: repeat(var(--n, 3), 1fr);
+  gap: var(--gap);
+  align-items: start;
+}
+.row.narrow { max-width: 900px; margin: 0 auto; }
+
+.next {
+  display: flex;
+  justify-content: space-between;
+  border-top: 1px solid #ccc;
+  padding-top: var(--gap);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+/* about */
+.about {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--gap);
+  margin-top: 18vh;
+  font-size: 20px;
+  line-height: 1.35;
+}
+.about p + p { margin-top: 1em; }
+.about dl { font-size: 14px; }
+.about dt { font-size: 11px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); margin-top: 24px; }
+.about dt:first-child { margin-top: 0; }
+
+@media (max-width: 800px) {
+  .grid { grid-template-columns: 1fr 1fr; margin-top: 10vh; }
+  .about { grid-template-columns: 1fr; font-size: 17px; }
+  .row { --n: 2 !important; }
+}
+@media (max-width: 500px) {
+  .grid { grid-template-columns: 1fr; }
+}
