@@ -1,5 +1,6 @@
-// Live shader breakdown: compiles the GLSL shown in each <code data-glsl> block
-// (plus the shared helpers block) into the canvas next to it.
+// Live shader breakdown: compiles the GLSL in each <script type="x-shader/x-fragment">
+// (plus the shared helpers) into its canvas. Sliders in the same .step set the
+// uniform named by their data-u.
 (function () {
   const helpers = document.getElementById('glsl-helpers');
   const steps = [...document.querySelectorAll('canvas[data-glsl]')];
@@ -37,7 +38,9 @@
     const loc = gl.getAttribLocation(prog, 'p');
     gl.enableVertexAttribArray(loc);
     gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
-    return { canvas, gl, res: gl.getUniformLocation(prog, 'res'), t: gl.getUniformLocation(prog, 't'),
+    const sliders = [...canvas.closest('.step').querySelectorAll('input[data-u]')]
+      .map(input => ({ input, loc: gl.getUniformLocation(prog, input.dataset.u) }));
+    return { canvas, gl, sliders, res: gl.getUniformLocation(prog, 'res'), t: gl.getUniformLocation(prog, 't'),
              aspect: gl.getUniformLocation(prog, 'aspect'), visible: false };
   }).filter(Boolean);
 
@@ -50,8 +53,12 @@
     gl.uniform2f(v.res, w, h);
     gl.uniform1f(v.t, time);
     gl.uniform1f(v.aspect, w / h);
+    for (const s of v.sliders) gl.uniform1f(s.loc, +s.input.value);
     gl.drawArrays(gl.TRIANGLES, 0, 3);
   }
+
+  // with motion off there is no loop, so redraw when a slider moves
+  if (still) views.forEach(v => v.sliders.forEach(s => s.input.addEventListener('input', () => draw(v, 2))));
 
   // only animate the canvases that are on screen
   const io = new IntersectionObserver(entries => {

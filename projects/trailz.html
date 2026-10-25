@@ -24,9 +24,7 @@
   </figure>
 
   <figure>
-    <div class="phone solo">
-      <video src="../video/card-drop.mp4" poster="../video/card-drop.jpg" width="886" height="1920" autoplay muted loop playsinline preload="metadata" aria-label="Card drop in game"></video>
-    </div>
+    <video class="solo" src="../video/card-drop.mp4" poster="../video/card-drop.jpg" width="886" height="1920" autoplay muted loop playsinline preload="metadata" aria-label="Card drop in game"></video>
   </figure>
   <figure>
     <div class="row narrow" style="--n:5; max-width:1300px; gap:24px">
@@ -40,113 +38,119 @@
   </figure>
   <figure>
     <h2 class="label">Shader breakdown</h2>
-    <!-- each canvas runs the GLSL in the code block below it (see js/shaders.js) -->
+    <!-- each canvas runs the GLSL in its <script type="x-shader/x-fragment">; sliders drive the uniforms (see js/shaders.js) -->
     <div class="shaders">
       <div class="step">
         <div class="phone"><canvas data-glsl="s1" aria-label="Centred screen-space UVs"></canvas></div>
         <p>1. Centred screen-space UVs</p>
-<pre><code id="s1">vec3 frag(vec2 uv) {
-  return vec3(clamp(uv * 2.0, 0.0, 1.0), 0.0);
-}</code></pre>
+        <label>Scale <input type="range" data-u="scale" min="0.5" max="4" step="0.01" value="2"></label>
       </div>
       <div class="step">
         <div class="phone"><canvas data-glsl="s2" aria-label="Polar UVs with a twirl"></canvas></div>
         <p>2. Into polar UVs with a small twirl</p>
-<pre><code id="s2">vec3 frag(vec2 uv) {
-  vec2 p = polar(uv, 0.8 + 0.4 * sin(t));
-  return vec3(min(p.x * 4.0, 1.0), p.y, 0.0);
-}</code></pre>
+        <label>Twirl <input type="range" data-u="twirl" min="0" max="3" step="0.01" value="0.8"></label>
       </div>
       <div class="step">
         <div class="phone"><canvas data-glsl="s3" aria-label="Indexed length steps"></canvas></div>
         <p>3. Indexed length steps: floor polarUV.x</p>
-<pre><code id="s3">vec3 frag(vec2 uv) {
-  vec2 p = polar(uv, 0.8);
-  float i = floor(p.x * 10.0);
-  return vec3(1.0 - i / 10.0);
-}</code></pre>
+        <label>Steps <input type="range" data-u="steps" min="2" max="30" step="1" value="10"></label>
       </div>
       <div class="step">
         <div class="phone"><canvas data-glsl="s4" aria-label="Steps plus the y component"></canvas></div>
         <p>4. Add the y component of the UVs</p>
-<pre><code id="s4">vec3 frag(vec2 uv) {
-  vec2 p = polar(uv, 0.8);
-  float i = floor(p.x * 10.0);
-  return vec3(fract(p.y + i * 0.13));
-}</code></pre>
+        <label>Steps <input type="range" data-u="steps" min="2" max="30" step="1" value="10"></label>
+        <label>Offset per step <input type="range" data-u="offset" min="0" max="0.5" step="0.005" value="0.13"></label>
+        <label>Twirl <input type="range" data-u="twirl" min="0" max="3" step="0.01" value="0.8"></label>
       </div>
       <div class="step">
         <div class="phone"><canvas data-glsl="s5" aria-label="Lightning shape"></canvas></div>
         <p>5. Distance from 0.5 gives the lightning shape</p>
-<pre><code id="s5">vec3 frag(vec2 uv) {
-  vec2 p = polar(uv, 0.8);
-  float i = floor(p.x * 10.0);
-  float v = fract(p.y + i * 0.13);
-  return vec3(abs(v - 0.5) * 2.0);
-}</code></pre>
+        <label>Steps <input type="range" data-u="steps" min="2" max="30" step="1" value="10"></label>
+        <label>Offset per step <input type="range" data-u="offset" min="0" max="0.5" step="0.005" value="0.13"></label>
+        <label>Twirl <input type="range" data-u="twirl" min="0" max="3" step="0.01" value="0.8"></label>
       </div>
       <div class="step">
         <div class="phone"><canvas data-glsl="s6" aria-label="Noise sampled with polar UVs"></canvas></div>
         <p>6. Sample noise with polar UVs</p>
-<pre><code id="s6">vec3 frag(vec2 uv) {
-  vec2 p = polar(uv, 2.0);
-  float n = noise(vec2(p.y * 6.0, p.x * 2.0 - t * 0.5));
-  return vec3(step(0.5, n));
-}</code></pre>
+        <label>Twirl <input type="range" data-u="twirl" min="0" max="4" step="0.01" value="2"></label>
+        <label>Radial scale <input type="range" data-u="scale" min="0.5" max="6" step="0.01" value="2"></label>
+        <label>Threshold <input type="range" data-u="threshold" min="0.2" max="0.8" step="0.01" value="0.5"></label>
       </div>
       <div class="step">
         <div class="phone"><canvas data-glsl="s7" aria-label="Animated circles"></canvas></div>
         <p>7. Add the circles animation</p>
-<pre><code id="s7">vec3 frag(vec2 uv) {
-  vec2 p = polar(uv, 0.0);
-  float d = abs(fract(p.x * 8.0 - t * 0.5) - 0.5);
-  float ring = 1.0 - smoothstep(0.02, 0.05, d);
-  return vec3(0.75, 0.1, 0.65) * ring;
-}</code></pre>
-      </div>
-      <div class="step">
-        <div class="phone"><canvas data-glsl="s8" aria-label="All layers combined"></canvas></div>
-        <p>8. All together, tuned per tier</p>
-<pre><code id="s8">vec3 frag(vec2 uv) {
-  vec2 p = polar(uv, 1.2);
-  float i = floor(p.x * 10.0);
-  float bolt = abs(fract(p.y + i * 0.13) - 0.5) * 2.0;
-  float n = noise(vec2(p.y * 6.0, p.x * 2.0 - t * 0.5));
-  float ring = 1.0 - smoothstep(0.02, 0.05,
-    abs(fract(p.x * 8.0 - t * 0.5) - 0.5));
-  vec3 col = mix(vec3(1.0, 0.5, 0.0), vec3(1.0, 0.78, 0.1),
-    step(0.5, bolt));
-  col = mix(col, vec3(1.0, 0.68, 0.5), step(0.6, n) * 0.6);
-  return col + ring * 0.12;
-}</code></pre>
+        <label>Rings <input type="range" data-u="rings" min="2" max="20" step="1" value="8"></label>
+        <label>Speed <input type="range" data-u="speed" min="0" max="2" step="0.01" value="0.5"></label>
+        <label>Width <input type="range" data-u="width" min="0.02" max="0.25" step="0.005" value="0.05"></label>
       </div>
     </div>
-    <p class="label">Shared helpers</p>
-<pre><code id="glsl-helpers">const float TAU = 6.2831853;
-
-// polar UVs: x = distance from centre, y = angle 0..1
-// twirl bends the angle by the distance; t spins it slowly
-vec2 polar(vec2 uv, float twirl) {
+<script type="x-shader/x-fragment" id="glsl-helpers">
+const float TAU = 6.2831853;
+// polar UVs: x = distance from centre, y = angle 0..1; twirl bends the angle by distance
+vec2 polar(vec2 uv, float tw) {
   uv.x *= aspect;
   float r = length(uv);
   float a = atan(uv.y, uv.x) / TAU + 0.5;
-  return vec2(r, fract(a + r * twirl + t * 0.05));
+  return vec2(r, fract(a + r * tw + t * 0.05));
 }
-
-float hash(vec2 p) {
-  return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
-}
-
-// value noise that wraps every 6 cells in x,
-// so it has no seam where the polar angle wraps
+float hash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+// value noise that wraps every 6 cells in x, so there is no seam where the angle wraps
 float noise(vec2 p) {
   vec2 i = floor(p), f = fract(p);
   f = f * f * (3.0 - 2.0 * f);
   float x0 = mod(i.x, 6.0), x1 = mod(i.x + 1.0, 6.0);
   return mix(mix(hash(vec2(x0, i.y)), hash(vec2(x1, i.y)), f.x),
              mix(hash(vec2(x0, i.y + 1.0)), hash(vec2(x1, i.y + 1.0)), f.x), f.y);
-}</code></pre>
-    <figcaption>The tiered backgrounds are one screen-space shader built in layers. A wide range of parameters gives diverse variations across the screen. Every phone above is running the code under it, live.</figcaption>
+}
+</script>
+<script type="x-shader/x-fragment" id="s1">
+uniform float scale;
+vec3 frag(vec2 uv) { return vec3(clamp(uv * scale, 0.0, 1.0), 0.0); }
+</script>
+<script type="x-shader/x-fragment" id="s2">
+uniform float twirl;
+vec3 frag(vec2 uv) {
+  vec2 p = polar(uv, twirl);
+  return vec3(min(p.x * 4.0, 1.0), p.y, 0.0);
+}
+</script>
+<script type="x-shader/x-fragment" id="s3">
+uniform float steps;
+vec3 frag(vec2 uv) {
+  float i = floor(polar(uv, 0.0).x * steps);
+  return vec3(1.0 - i / steps);
+}
+</script>
+<script type="x-shader/x-fragment" id="s4">
+uniform float steps, offset, twirl;
+vec3 frag(vec2 uv) {
+  vec2 p = polar(uv, twirl);
+  return vec3(fract(p.y + floor(p.x * steps) * offset));
+}
+</script>
+<script type="x-shader/x-fragment" id="s5">
+uniform float steps, offset, twirl;
+vec3 frag(vec2 uv) {
+  vec2 p = polar(uv, twirl);
+  float v = fract(p.y + floor(p.x * steps) * offset);
+  return vec3(abs(v - 0.5) * 2.0);
+}
+</script>
+<script type="x-shader/x-fragment" id="s6">
+uniform float twirl, scale, threshold;
+vec3 frag(vec2 uv) {
+  vec2 p = polar(uv, twirl);
+  return vec3(step(threshold, noise(vec2(p.y * 6.0, p.x * scale - t * 0.5))));
+}
+</script>
+<script type="x-shader/x-fragment" id="s7">
+uniform float rings, speed, width;
+vec3 frag(vec2 uv) {
+  float d = abs(fract(polar(uv, 0.0).x * rings - t * speed) - 0.5);
+  return vec3(0.75, 0.1, 0.65) * (1.0 - smoothstep(width * 0.4, width, d));
+}
+</script>
+    <figcaption>The tiered backgrounds are one screen-space shader built in layers, with parameters that give each tier its own look. Drag the sliders to play with each step.</figcaption>
   </figure>
 
   <figure>
