@@ -67,22 +67,15 @@
         <label>Twirl <input type="range" data-u="twirl" min="0" max="3" step="0.01" value="0.8"></label>
       </div>
       <div class="step">
-        <div class="phone"><canvas data-glsl="s5" aria-label="Lightning shape"></canvas></div>
-        <p>5. Distance from 0.5 gives the lightning shape</p>
-        <label>Steps <input type="range" data-u="steps" min="2" max="30" step="1" value="10"></label>
-        <label>Offset per step <input type="range" data-u="offset" min="0" max="0.5" step="0.005" value="0.13"></label>
-        <label>Twirl <input type="range" data-u="twirl" min="0" max="3" step="0.01" value="0.8"></label>
-      </div>
-      <div class="step">
         <div class="phone"><canvas data-glsl="s6" aria-label="Noise sampled with polar UVs"></canvas></div>
-        <p>6. Sample noise with polar UVs</p>
+        <p>5. Sample noise with polar UVs</p>
         <label>Twirl <input type="range" data-u="twirl" min="0" max="4" step="0.01" value="2"></label>
         <label>Radial scale <input type="range" data-u="scale" min="0.5" max="6" step="0.01" value="2"></label>
         <label>Threshold <input type="range" data-u="threshold" min="0.2" max="0.8" step="0.01" value="0.5"></label>
       </div>
       <div class="step">
         <div class="phone"><canvas data-glsl="s7" aria-label="Animated circles"></canvas></div>
-        <p>7. Add the circles animation</p>
+        <p>6. Add the circles animation</p>
         <label>Rings <input type="range" data-u="rings" min="2" max="20" step="1" value="8"></label>
         <label>Speed <input type="range" data-u="speed" min="0" max="2" step="0.01" value="0.5"></label>
         <label>Width <input type="range" data-u="width" min="0.02" max="0.25" step="0.005" value="0.05"></label>
@@ -130,14 +123,6 @@ uniform float steps, offset, twirl;
 vec3 frag(vec2 uv) {
   vec2 p = polar(uv, twirl);
   return vec3(fract(p.y + floor(p.x * steps) * offset));
-}
-</script>
-<script type="x-shader/x-fragment" id="s5">
-uniform float steps, offset, twirl;
-vec3 frag(vec2 uv) {
-  vec2 p = polar(uv, twirl);
-  float v = fract(p.y + floor(p.x * steps) * offset);
-  return vec3(abs(v - 0.5) * 2.0);
 }
 </script>
 <script type="x-shader/x-fragment" id="s6">

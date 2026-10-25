@@ -109,14 +109,19 @@ figcaption {
   letter-spacing: .04em;
   margin-bottom: 16px;
 }
+figure > .label { text-align: center; margin-bottom: 32px; }
+/* each step is exactly as wide as its phone so label and sliders line up with it;
+   max-width keeps it to centred rows of three */
 .shaders {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 40px 24px;
-  margin-bottom: 40px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 56px 64px;
+  max-width: 880px;
+  margin: 0 auto 40px;
 }
-.step { min-width: 0; }
-.step .phone { max-width: 220px; margin: 0 auto 14px; }
+.step { width: 240px; max-width: 100%; }
+.step .phone { margin-bottom: 14px; }
 .step p { margin-bottom: 8px; }
 .step label {
   display: block;
@@ -127,8 +132,6 @@ figcaption {
 }
 .step input[type="range"] { display: block; width: 100%; margin: 2px 0 8px; accent-color: var(--fg); }
 .row video { display: block; width: 100%; height: auto; background: #000; }
-@media (max-width: 1000px) { .shaders { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 500px) { .shaders { grid-template-columns: 1fr; } }
 .phone::after {
   content: "";
   position: absolute;
