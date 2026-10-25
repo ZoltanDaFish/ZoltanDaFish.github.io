@@ -24,6 +24,11 @@
   </figure>
 
   <figure>
+    <div class="phone solo">
+      <video src="../video/card-drop.mp4" poster="../video/card-drop.jpg" width="886" height="1920" autoplay muted loop playsinline preload="metadata" aria-label="Card drop in game"></video>
+    </div>
+  </figure>
+  <figure>
     <div class="row narrow" style="--n:5; max-width:1300px; gap:24px">
       <div class="phone"><img src="../images/trailz/card-drop-1.jpg" width="900" height="1949" alt="Card drop, basic" loading="lazy"></div>
       <div class="phone"><img src="../images/trailz/card-drop-2.jpg" width="900" height="1949" alt="Card drop, boosted" loading="lazy"></div>
@@ -34,9 +39,114 @@
     <figcaption>Shaders and technical animation for the card drop: holo foil cards, tiered animated backgrounds and an escalating tap-to-reveal.</figcaption>
   </figure>
   <figure>
-    <!-- placeholder from PDF, swap for source -->
-    <img src="../images/trailz/shader-breakdown.jpg" width="2400" height="1161" alt="Shader breakdown steps" loading="lazy">
-    <figcaption>Shader breakdown: centred screen-space UVs into polar UVs with a twirl, indexed length steps, distance from 0.5 for the lightning shape, noise sampled with polar UVs and animated circles. A wide range of parameters gives diverse variations across the screen.</figcaption>
+    <h2 class="label">Shader breakdown</h2>
+    <!-- each canvas runs the GLSL in the code block below it (see js/shaders.js) -->
+    <div class="shaders">
+      <div class="step">
+        <div class="phone"><canvas data-glsl="s1" aria-label="Centred screen-space UVs"></canvas></div>
+        <p>1. Centred screen-space UVs</p>
+<pre><code id="s1">vec3 frag(vec2 uv) {
+  return vec3(clamp(uv * 2.0, 0.0, 1.0), 0.0);
+}</code></pre>
+      </div>
+      <div class="step">
+        <div class="phone"><canvas data-glsl="s2" aria-label="Polar UVs with a twirl"></canvas></div>
+        <p>2. Into polar UVs with a small twirl</p>
+<pre><code id="s2">vec3 frag(vec2 uv) {
+  vec2 p = polar(uv, 0.8 + 0.4 * sin(t));
+  return vec3(min(p.x * 4.0, 1.0), p.y, 0.0);
+}</code></pre>
+      </div>
+      <div class="step">
+        <div class="phone"><canvas data-glsl="s3" aria-label="Indexed length steps"></canvas></div>
+        <p>3. Indexed length steps: floor polarUV.x</p>
+<pre><code id="s3">vec3 frag(vec2 uv) {
+  vec2 p = polar(uv, 0.8);
+  float i = floor(p.x * 10.0);
+  return vec3(1.0 - i / 10.0);
+}</code></pre>
+      </div>
+      <div class="step">
+        <div class="phone"><canvas data-glsl="s4" aria-label="Steps plus the y component"></canvas></div>
+        <p>4. Add the y component of the UVs</p>
+<pre><code id="s4">vec3 frag(vec2 uv) {
+  vec2 p = polar(uv, 0.8);
+  float i = floor(p.x * 10.0);
+  return vec3(fract(p.y + i * 0.13));
+}</code></pre>
+      </div>
+      <div class="step">
+        <div class="phone"><canvas data-glsl="s5" aria-label="Lightning shape"></canvas></div>
+        <p>5. Distance from 0.5 gives the lightning shape</p>
+<pre><code id="s5">vec3 frag(vec2 uv) {
+  vec2 p = polar(uv, 0.8);
+  float i = floor(p.x * 10.0);
+  float v = fract(p.y + i * 0.13);
+  return vec3(abs(v - 0.5) * 2.0);
+}</code></pre>
+      </div>
+      <div class="step">
+        <div class="phone"><canvas data-glsl="s6" aria-label="Noise sampled with polar UVs"></canvas></div>
+        <p>6. Sample noise with polar UVs</p>
+<pre><code id="s6">vec3 frag(vec2 uv) {
+  vec2 p = polar(uv, 2.0);
+  float n = noise(vec2(p.y * 6.0, p.x * 2.0 - t * 0.5));
+  return vec3(step(0.5, n));
+}</code></pre>
+      </div>
+      <div class="step">
+        <div class="phone"><canvas data-glsl="s7" aria-label="Animated circles"></canvas></div>
+        <p>7. Add the circles animation</p>
+<pre><code id="s7">vec3 frag(vec2 uv) {
+  vec2 p = polar(uv, 0.0);
+  float d = abs(fract(p.x * 8.0 - t * 0.5) - 0.5);
+  float ring = 1.0 - smoothstep(0.02, 0.05, d);
+  return vec3(0.75, 0.1, 0.65) * ring;
+}</code></pre>
+      </div>
+      <div class="step">
+        <div class="phone"><canvas data-glsl="s8" aria-label="All layers combined"></canvas></div>
+        <p>8. All together, tuned per tier</p>
+<pre><code id="s8">vec3 frag(vec2 uv) {
+  vec2 p = polar(uv, 1.2);
+  float i = floor(p.x * 10.0);
+  float bolt = abs(fract(p.y + i * 0.13) - 0.5) * 2.0;
+  float n = noise(vec2(p.y * 6.0, p.x * 2.0 - t * 0.5));
+  float ring = 1.0 - smoothstep(0.02, 0.05,
+    abs(fract(p.x * 8.0 - t * 0.5) - 0.5));
+  vec3 col = mix(vec3(1.0, 0.5, 0.0), vec3(1.0, 0.78, 0.1),
+    step(0.5, bolt));
+  col = mix(col, vec3(1.0, 0.68, 0.5), step(0.6, n) * 0.6);
+  return col + ring * 0.12;
+}</code></pre>
+      </div>
+    </div>
+    <p class="label">Shared helpers</p>
+<pre><code id="glsl-helpers">const float TAU = 6.2831853;
+
+// polar UVs: x = distance from centre, y = angle 0..1
+// twirl bends the angle by the distance; t spins it slowly
+vec2 polar(vec2 uv, float twirl) {
+  uv.x *= aspect;
+  float r = length(uv);
+  float a = atan(uv.y, uv.x) / TAU + 0.5;
+  return vec2(r, fract(a + r * twirl + t * 0.05));
+}
+
+float hash(vec2 p) {
+  return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
+}
+
+// value noise that wraps every 6 cells in x,
+// so it has no seam where the polar angle wraps
+float noise(vec2 p) {
+  vec2 i = floor(p), f = fract(p);
+  f = f * f * (3.0 - 2.0 * f);
+  float x0 = mod(i.x, 6.0), x1 = mod(i.x + 1.0, 6.0);
+  return mix(mix(hash(vec2(x0, i.y)), hash(vec2(x1, i.y)), f.x),
+             mix(hash(vec2(x0, i.y + 1.0)), hash(vec2(x1, i.y + 1.0)), f.x), f.y);
+}</code></pre>
+    <figcaption>The tiered backgrounds are one screen-space shader built in layers. A wide range of parameters gives diverse variations across the screen. Every phone above is running the code under it, live.</figcaption>
   </figure>
 
   <figure>
@@ -74,5 +184,6 @@
 </main>
 
 <footer class="next"><a href="../">← All work</a><a href="blocky-block-worlds.html">Blocky Block Worlds →</a></footer>
+<script src="../js/shaders.js" defer></script>
 </body>
 </html>
