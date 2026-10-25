@@ -1,10 +1,11 @@
 // Live shader breakdown: compiles the GLSL in each <script type="x-shader/x-fragment">
-// (plus the shared helpers) into its canvas. Sliders in the same .step set the
-// uniform named by their data-u.
+// (plus the shared helpers) into its canvas. Each slider sets the uniform named by its
+// data-u on its own step and every later one, so parameters carry down the chain.
 (function () {
   const helpers = document.getElementById('glsl-helpers');
   const steps = [...document.querySelectorAll('canvas[data-glsl]')];
   if (!helpers || !steps.length) return;
+  const stepEls = [...document.querySelectorAll('.shaders .step')];
 
   const HEADER = 'precision highp float;\nuniform vec2 res;\nuniform float t;\nuniform float aspect;\n';
   const MAIN = '\nvoid main() {\n  vec2 uv = gl_FragCoord.xy / res - 0.5;\n  gl_FragColor = vec4(frag(uv), 1.0);\n}\n';
@@ -38,7 +39,8 @@
     const loc = gl.getAttribLocation(prog, 'p');
     gl.enableVertexAttribArray(loc);
     gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
-    const sliders = [...canvas.closest('.step').querySelectorAll('input[data-u]')]
+    const upTo = stepEls.indexOf(canvas.closest('.step'));
+    const sliders = stepEls.slice(0, upTo + 1).flatMap(el => [...el.querySelectorAll('input[data-u]')])
       .map(input => ({ input, loc: gl.getUniformLocation(prog, input.dataset.u) }));
     return { canvas, gl, sliders, res: gl.getUniformLocation(prog, 'res'), t: gl.getUniformLocation(prog, 't'),
              aspect: gl.getUniformLocation(prog, 'aspect'), visible: false };
@@ -58,7 +60,7 @@
   }
 
   // with motion off there is no loop, so redraw when a slider moves
-  if (still) views.forEach(v => v.sliders.forEach(s => s.input.addEventListener('input', () => draw(v, 2))));
+  if (still) views.forEach(v => v.sliders.forEach(s => s.input.addEventListener('input', () => v.visible && draw(v, 2))));
 
   // only animate the canvases that are on screen
   const io = new IntersectionObserver(entries => {
