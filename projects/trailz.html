@@ -47,7 +47,8 @@
       <div class="step">
         <div class="phone"><canvas data-glsl="s1" aria-label="Centred screen-space UVs"></canvas></div>
         <p>1. Centred screen-space UVs</p>
-        <label>Scale <input type="range" data-u="scale" min="0.5" max="4" step="0.01" value="2"></label>
+        <label>X offset <input type="range" data-u="offsetX" min="-0.5" max="0.5" step="0.005" value="0"></label>
+        <label>Y offset <input type="range" data-u="offsetY" min="-0.5" max="0.5" step="0.005" value="0"></label>
       </div>
       <div class="step">
         <div class="phone"><canvas data-glsl="s2" aria-label="Polar UVs with a twirl"></canvas></div>
@@ -101,8 +102,9 @@ float noise(vec2 p) {
 }
 </script>
 <script type="x-shader/x-fragment" id="s1">
-uniform float scale;
-vec3 frag(vec2 uv) { return vec3(clamp(uv * scale, 0.0, 1.0), 0.0); }
+uniform float offsetX, offsetY;
+// move the centre point; red = x past it, green = y past it
+vec3 frag(vec2 uv) { return vec3(clamp((uv - vec2(offsetX, offsetY)) * 2.0, 0.0, 1.0), 0.0); }
 </script>
 <script type="x-shader/x-fragment" id="s2">
 uniform float twirl;
