@@ -68,6 +68,15 @@ figcaption { max-width: 640px; margin-top: 10px; color: var(--muted); }
 }
 .row.narrow { max-width: 900px; margin: 0 auto; }
 
+/* full-width grid */
+.bleed {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin: 0 calc(-1 * var(--gap));
+}
+.bleed + figcaption { margin-top: 10px; }
+
 .next {
   display: flex;
   justify-content: space-between;
@@ -96,6 +105,7 @@ figcaption { max-width: 640px; margin-top: 10px; color: var(--muted); }
   .grid { grid-template-columns: 1fr 1fr; margin-top: 10vh; }
   .about { grid-template-columns: 1fr; font-size: 17px; }
   .row { --n: 2 !important; }
+  .bleed { grid-template-columns: 1fr; }
 }
 @media (max-width: 500px) {
   .grid { grid-template-columns: 1fr; }
