@@ -126,7 +126,7 @@ figcaption {
   color: var(--muted);
 }
 .step input[type="range"] { display: block; width: 100%; margin: 2px 0 8px; accent-color: var(--fg); }
-video.solo { display: block; width: 100%; max-width: 360px; height: auto; margin: 0 auto; }
+.row video { display: block; width: 100%; height: auto; background: #000; }
 @media (max-width: 1000px) { .shaders { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 500px) { .shaders { grid-template-columns: 1fr; } }
 .phone::after {
