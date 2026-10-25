@@ -47,6 +47,17 @@ img { display: block; width: 100%; height: auto; background: #e4e2dc; }
   margin-bottom: 6px;
 }
 .tile img, .tile video { display: block; width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; background: #e4e2dc; }
+/* logo laid over a tile's video */
+.tile .stack { position: relative; }
+.tile .overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 70%;
+  aspect-ratio: auto;
+  background: none;
+  transform: translate(-50%, -50%);
+}
 
 /* project page */
 .intro {
