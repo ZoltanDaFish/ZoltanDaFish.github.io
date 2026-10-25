@@ -58,6 +58,7 @@ img { display: block; width: 100%; height: auto; background: #e4e2dc; }
   background: none;
   transform: translate(-50%, -50%);
 }
+.tile .overlay.badge { width: 22%; filter: drop-shadow(0 6px 14px rgba(0, 0, 0, .25)); }
 
 /* project page */
 .intro {
