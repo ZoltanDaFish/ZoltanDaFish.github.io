@@ -70,7 +70,7 @@
       <div class="step">
         <div class="phone"><canvas data-glsl="s6" aria-label="Noise sampled with polar UVs"></canvas></div>
         <p>5. Sample noise with polar UVs</p>
-        <label>Twirl <input type="range" data-u="twirl" min="0" max="4" step="0.01" value="2"></label>
+        <label>Noise scale <input type="range" data-u="cells" min="2" max="24" step="1" value="6"></label>
         <label>Radial scale <input type="range" data-u="scale" min="0.5" max="6" step="0.01" value="2"></label>
         <label>Threshold <input type="range" data-u="threshold" min="0.2" max="0.8" step="0.01" value="0.5"></label>
       </div>
@@ -92,11 +92,11 @@ vec2 polar(vec2 uv, float tw) {
   return vec2(r, fract(a + r * tw + t * 0.05));
 }
 float hash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
-// value noise that wraps every 6 cells in x, so there is no seam where the angle wraps
-float noise(vec2 p) {
+// value noise that wraps every `period` cells in x, so there is no seam where the angle wraps
+float noise(vec2 p, float period) {
   vec2 i = floor(p), f = fract(p);
   f = f * f * (3.0 - 2.0 * f);
-  float x0 = mod(i.x, 6.0), x1 = mod(i.x + 1.0, 6.0);
+  float x0 = mod(i.x, period), x1 = mod(i.x + 1.0, period);
   return mix(mix(hash(vec2(x0, i.y)), hash(vec2(x1, i.y)), f.x),
              mix(hash(vec2(x0, i.y + 1.0)), hash(vec2(x1, i.y + 1.0)), f.x), f.y);
 }
@@ -128,10 +128,12 @@ vec3 frag(vec2 uv) {
 }
 </script>
 <script type="x-shader/x-fragment" id="s6">
-uniform float twirl, scale, threshold;
+uniform float cells, scale, threshold;
+// cells = noise cells around the circle (whole number keeps it seamless)
 vec3 frag(vec2 uv) {
-  vec2 p = polar(uv, twirl);
-  return vec3(step(threshold, noise(vec2(p.y * 6.0, p.x * scale - t * 0.5))));
+  vec2 p = polar(uv, 2.0);
+  float n = noise(vec2(p.y * cells, (p.x * scale - t * 0.5) * cells / 6.0), cells);
+  return vec3(step(threshold, n));
 }
 </script>
 <script type="x-shader/x-fragment" id="s7">
