@@ -1,7 +1,7 @@
 // Tilts each .phone toward the cursor while it is over the phone, and eases back on leave.
 (function () {
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  const MAX = 18; // degrees at the phone's edge
+  const MAX = 8; // degrees at the phone's edge
 
   for (const el of document.querySelectorAll('.phone')) {
     el.addEventListener('pointermove', e => {
