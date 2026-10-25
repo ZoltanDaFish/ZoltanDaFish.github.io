@@ -140,12 +140,9 @@ figcaption {
   border-radius: 99px;
   background: #000;
 }
-.phone { transform: perspective(900px) rotateY(0) rotateX(0); }
-.phone:hover { transform: perspective(900px) rotateY(-16deg) rotateX(6deg) translateY(-6px); }
-.phone:nth-child(even):hover { transform: perspective(900px) rotateY(16deg) rotateX(6deg) translateY(-6px); }
-@media (prefers-reduced-motion: reduce) {
-  .phone, .phone:hover { transition: none; transform: none; }
-}
+/* js/tilt.js sets --rx / --ry from the cursor position */
+.phone { transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); }
+.phone.tilting { transition-duration: .08s; }
 
 .next {
   display: flex;
