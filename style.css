@@ -86,6 +86,11 @@ figcaption {
 }
 .row.narrow { max-width: 900px; margin: 0 auto; }
 
+/* photo pages: centred heroes, then a contact-sheet grid */
+figure.hero { max-width: 1100px; margin-left: auto; margin-right: auto; }
+.row.contact { max-width: 1100px; margin: 0 auto; gap: 10px; }
+@media (max-width: 800px) { .row.contact { --n: 3 !important; } }
+
 /* full-width grid */
 .bleed {
   display: grid;
