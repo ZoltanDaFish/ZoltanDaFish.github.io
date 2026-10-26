@@ -94,6 +94,10 @@ figure.hero { max-width: 1100px; margin-left: auto; margin-right: auto; }
 .row.contact { max-width: 1100px; margin: 0 auto; }
 @media (max-width: 800px) { .row.contact { --n: 3 !important; } }
 
+/* line art on the page background, each drawing centred in a square cell */
+.row.lineart { align-items: center; max-width: 1100px; margin: 0 auto; }
+.lineart img { aspect-ratio: 1; object-fit: contain; padding: 12%; background: none; }
+
 /* three-up grid inside the page margins */
 .bleed {
   display: grid;
