@@ -25,6 +25,18 @@
   --muted: #777;
   --gap: 16px;
   --ascii: #a8ff5c;  /* background ASCII colour (js/ascii.js) */
+  --placeholder: #e4e2dc;
+  --rule: #ccc;
+}
+/* night mode (the sun/moon toggle in the header, js/theme.js): dark, unsaturated purple */
+:root[data-theme="dark"] {
+  --bg: #24212b;
+  --fg: #ebe8f0;
+  --muted: #8e889a;
+  --ascii: #5f5a69;
+  --placeholder: #2e2a36;
+  --rule: #3b3646;
+  color-scheme: dark;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -38,7 +50,7 @@ body {
 
 a { color: inherit; text-decoration: none; }
 a:hover { color: var(--muted); }
-img { display: block; width: 100%; height: auto; background: #e4e2dc; }
+img { display: block; width: 100%; height: auto; background: var(--placeholder); }
 
 /* header */
 .top {
@@ -89,6 +101,23 @@ img { display: block; width: 100%; height: auto; background: #e4e2dc; }
 }
 .top nav { display: flex; gap: 28px; justify-self: end; }
 .top nav a[aria-current] { color: var(--muted); }
+/* sun/moon toggle in the middle of the header: the moon shows in day mode, the sun at night */
+.theme {
+  justify-self: center;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 20px;
+  margin-top: -1px;
+  border: 0;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+}
+.theme:hover { color: var(--muted); }
+.theme svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; }
+.theme .sun, :root[data-theme="dark"] .theme .moon { display: none; }
+:root[data-theme="dark"] .theme .sun { display: block; }
 
 /* ASCII fluid background (js/ascii.js): fixed, behind everything, never takes clicks */
 canvas.ascii { position: fixed; inset: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
@@ -107,7 +136,7 @@ canvas.ascii { position: fixed; inset: 0; width: 100%; height: 100%; z-index: -1
   letter-spacing: .04em;
   margin-bottom: 6px;
 }
-.tile img, .tile video { display: block; width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; background: #e4e2dc; }
+.tile img, .tile video { display: block; width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; background: var(--placeholder); }
 /* logo laid over a tile's video */
 .tile .stack { position: relative; }
 .tile .overlay {
@@ -229,7 +258,7 @@ figure > .label { text-align: center; margin-bottom: 32px; }
 .next {
   display: flex;
   justify-content: space-between;
-  border-top: 1px solid #ccc;
+  border-top: 1px solid var(--rule);
   padding-top: var(--gap);
   font-size: 11px;
   text-transform: uppercase;
@@ -259,8 +288,4 @@ figure > .label { text-align: center; margin-bottom: 32px; }
 }
 @media (max-width: 500px) {
   .grid { grid-template-columns: 1fr; }
-}
-@media (max-width: 600px) {
-  .top { grid-template-columns: 1fr auto; }
-  .top > span { display: none; }
 }

@@ -372,6 +372,7 @@
     color = [(n >> 16 & 255) / 255, (n >> 8 & 255) / 255, (n & 255) / 255];
   }
   readColor();
+  addEventListener('themechange', readColor);
   if (new URLSearchParams(location.search).has('tune')) {
     const pick = document.createElement('input');
     pick.type = 'color';
