@@ -53,7 +53,7 @@ img { display: block; width: 100%; height: auto; background: #e4e2dc; }
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 70%;
+  width: 56%;
   aspect-ratio: auto;
   background: none;
   transform: translate(-50%, -50%);
