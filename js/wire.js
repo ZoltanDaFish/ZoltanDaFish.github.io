@@ -20,8 +20,10 @@ for (const canvas of document.querySelectorAll('canvas[data-wire]')) {
   const scene = new THREE.Scene();
   scene.add(new THREE.LineSegments(geo, new THREE.LineBasicMaterial({ color: 0x111111, transparent: true, opacity: 0.45 })));
 
-  const camera = new THREE.PerspectiveCamera(30, 1, 0.1, 100);
-  camera.position.set(2.0, 1.1, 2.5);
+  // orthographic, framed so the model (normalised to -1..1) fits with a margin at any rotation
+  const VIEW = 1.15;
+  const camera = new THREE.OrthographicCamera(-VIEW, VIEW, VIEW, -VIEW, 0.1, 100);
+  camera.position.set(4, 2.2, 5);
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
   renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 2));
 
@@ -34,7 +36,8 @@ for (const canvas of document.querySelectorAll('canvas[data-wire]')) {
   function size() {
     const w = canvas.clientWidth, h = canvas.clientHeight;
     renderer.setSize(w, h, false);
-    camera.aspect = w / h;
+    camera.left = -VIEW * w / h;
+    camera.right = VIEW * w / h;
     camera.updateProjectionMatrix();
   }
   // draw only while something is moving
