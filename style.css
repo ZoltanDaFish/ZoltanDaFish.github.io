@@ -291,6 +291,16 @@ figure > .label { text-align: center; margin-bottom: 32px; }
   .about { grid-template-columns: 1fr; font-size: 17px; }
   .row { --n: 2 !important; }
   .bleed { grid-template-columns: 1fr; }
+  /* once a row folds into two columns, a lone last item centres instead of hanging left */
+  .row:not(.contact) > :last-child:nth-child(odd):not(:first-child),
+  .grid > :last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+    justify-self: center;
+    width: calc(50% - var(--gap) / 2);
+  }
+}
+@media (max-width: 500px) {
+  .grid > :last-child:nth-child(odd) { width: auto; justify-self: stretch; }
 }
 @media (max-width: 500px) {
   .grid { grid-template-columns: 1fr; }
