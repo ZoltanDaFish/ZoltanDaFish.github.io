@@ -167,7 +167,7 @@ figure > .label { text-align: center; margin-bottom: 32px; }
   color: var(--muted);
 }
 .step input[type="range"] { display: block; width: 100%; margin: 2px 0 8px; accent-color: var(--fg); }
-.row video { display: block; width: 100%; height: auto; background: #000; }
+.row video, figure > video { display: block; width: 100%; height: auto; background: #000; }
 .phone::after {
   content: "";
   position: absolute;
