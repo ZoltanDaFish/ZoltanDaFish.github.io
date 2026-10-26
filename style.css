@@ -10,7 +10,7 @@
 body {
   background: var(--bg);
   color: var(--fg);
-  font: 14px/1.45 "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font: 14px/1.45 "Switzer", "Helvetica Neue", Helvetica, Arial, sans-serif;
   padding: 0 var(--gap) 64px;
 }
 
