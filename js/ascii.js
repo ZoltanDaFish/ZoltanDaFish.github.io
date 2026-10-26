@@ -212,7 +212,9 @@
         r.selectNodeContents(el);
         rects = r.getClientRects();
       }
-      for (const b of rects) if (b.width > 1 && b.height > 1) landRects.push([b.left + sx, b.top + sy, b.width, b.height]);
+      // the sticky header stays put on screen, so its land is kept in viewport space
+      const pinned = !!el.closest('.top');
+      for (const b of rects) if (b.width > 1 && b.height > 1) landRects.push([b.left + (pinned ? 0 : sx), b.top + (pinned ? 0 : sy), b.width, b.height, pinned]);
     }
     layoutDirty = false;
     maskDirty = true;
@@ -224,10 +226,10 @@
     mc.fillStyle = '#fff';
     mc.filter = `blur(${(SHORE / MASK * 0.8).toFixed(1)}px)`;   // a soft coastline instead of hard boxes
     mc.beginPath();
-    for (const [x, y, w, h] of landRects) {
-      const top = y - scrollY;
+    for (const [x, y, w, h, pinned] of landRects) {
+      const top = pinned ? y : y - scrollY;
       if (top > innerHeight || top + h < 0) continue;
-      const rx = (x - scrollX) * s - pad, ry = top * s - pad, rw = w * s + pad * 2, rh = h * s + pad * 2;
+      const rx = (pinned ? x : x - scrollX) * s - pad, ry = top * s - pad, rw = w * s + pad * 2, rh = h * s + pad * 2;
       if (mc.roundRect) mc.roundRect(rx, ry, rw, rh, pad); else mc.rect(rx, ry, rw, rh);
     }
     mc.fill();
