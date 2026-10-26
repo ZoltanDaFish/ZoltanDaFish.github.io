@@ -12,12 +12,19 @@
   font-weight: 500;
   font-display: swap;
 }
+@font-face {
+  font-family: "Switzer";
+  src: url("https://cdn.fontshare.com/wf/HBNTRIISA5MEXGL5WPYI7CV2HIWTDV3Q/YDPDINVT673XLXNSTMLG4JNCZZMVVNPN/Y7SCNZJOT2MW5ADSGOFLDGH4TNL4JCQY.woff2") format("woff2");
+  font-weight: 700;
+  font-display: swap;
+}
 
 :root {
   --bg: #f3f2ee;
   --fg: #111;
   --muted: #777;
   --gap: 16px;
+  --ascii: #a8ff5c;  /* background ASCII colour (js/ascii.js) */
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -46,6 +53,9 @@ img { display: block; width: 100%; height: auto; background: #e4e2dc; }
 }
 .top nav { display: flex; gap: 24px; }
 .top nav a[aria-current] { color: var(--muted); }
+
+/* ASCII fluid background (js/ascii.js): fixed, behind everything, never takes clicks */
+canvas.ascii { position: fixed; inset: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
 
 /* home grid */
 .grid {
@@ -82,7 +92,7 @@ img { display: block; width: 100%; height: auto; background: #e4e2dc; }
   text-align: center;
   font-size: 21px;
 }
-.intro h1 { font-size: 42px; font-weight: 500; line-height: 1.15; margin-bottom: 18px; }
+.intro h1 { font-size: 42px; font-weight: 700; letter-spacing: -.03em; line-height: 1.15; margin-bottom: 18px; }
 .intro p + p { margin-top: 2px; }
 .meta { color: var(--muted); }
 

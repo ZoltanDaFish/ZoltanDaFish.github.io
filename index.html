@@ -9,9 +9,10 @@
 <link rel="preconnect" href="https://cdn.fontshare.com" crossorigin>
 <!-- first tile: fetch its poster straight away, it is the largest thing drawn on load -->
 <link rel="preload" as="image" href="video/card-drop-v2-square.webp" fetchpriority="high">
-<link rel="stylesheet" href="style.css?v=3eac82b9">
+<link rel="stylesheet" href="style.css?v=a513bfee">
 </head>
 <body>
+<canvas class="ascii" aria-hidden="true"></canvas>
 <header class="top">
   <a href="./">Yuval Brenner<br>Creative Technologist</a>
   <nav><a href="./" aria-current="page">Work</a><a href="about.html">About</a><a href="mailto:brenner.yuval@gmail.com">Contact</a></nav>
@@ -28,5 +29,6 @@
   <a class="tile" href="projects/sinai.html"><span>Sinai</span><img src="images/sinai/cover-900.webp" srcset="images/sinai/cover-450.webp 450w, images/sinai/cover-900.webp 900w" sizes="(max-width: 500px) 100vw, (max-width: 800px) 50vw, 33vw" width="900" height="900" alt="Lone tree beside stone houses, Sinai" loading="lazy"></a>
   <a class="tile" href="projects/houdini.html"><span>Houdini Procedural Assets</span><img src="images/houdini/cover-900.webp" srcset="images/houdini/cover-450.webp 450w, images/houdini/cover-900.webp 900w" sizes="(max-width: 500px) 100vw, (max-width: 800px) 50vw, 33vw" width="900" height="1125" alt="Procedural rock formation" loading="lazy"></a>
 </main>
+<script src="js/ascii.js?v=4dcd22a1" defer></script>
 </body>
 </html>
