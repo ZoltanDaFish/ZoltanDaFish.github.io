@@ -62,11 +62,13 @@ img { display: block; width: 100%; height: auto; background: #e4e2dc; }
 
 /* project page */
 .intro {
-  max-width: 640px;
-  margin: 12vh 0 64px;
+  max-width: 960px;
+  margin: 12vh auto 64px;
+  text-align: center;
+  font-size: 21px;
 }
-.intro h1 { font-size: 28px; font-weight: 500; line-height: 1.15; margin-bottom: 12px; }
-.intro p + p { margin-top: 8px; }
+.intro h1 { font-size: 42px; font-weight: 500; line-height: 1.15; margin-bottom: 18px; }
+.intro p + p { margin-top: 12px; }
 .meta { color: var(--muted); }
 
 /* one spacing rhythm site-wide: --gap between images in a block, 72px between blocks */
