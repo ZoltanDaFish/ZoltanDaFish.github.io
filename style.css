@@ -69,11 +69,11 @@ img { display: block; width: 100%; height: auto; background: #e4e2dc; }
 .intro p + p { margin-top: 8px; }
 .meta { color: var(--muted); }
 
+/* one spacing rhythm site-wide: --gap between images in a block, 72px between blocks */
 figure { margin-bottom: 72px; }
 figcaption {
   max-width: 640px;
   margin: 28px auto 0;
-  padding-bottom: 16px;
   text-align: center;
   font-size: 16px;
   color: var(--muted);
@@ -89,14 +89,14 @@ figcaption {
 
 /* photo pages: centred heroes, then a contact-sheet grid */
 figure.hero { max-width: 1100px; margin-left: auto; margin-right: auto; }
-.row.contact { max-width: 1100px; margin: 0 auto; gap: 10px; }
+.row.contact { max-width: 1100px; margin: 0 auto; }
 @media (max-width: 800px) { .row.contact { --n: 3 !important; } }
 
 /* full-width grid */
 .bleed {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
+  gap: var(--gap);
   margin: 0 calc(-1 * var(--gap));
 }
 
@@ -134,7 +134,7 @@ figure > .label { text-align: center; margin-bottom: 32px; }
   justify-content: center;
   gap: 56px 64px;
   max-width: 880px;
-  margin: 0 auto 40px;
+  margin: 0 auto;
 }
 .step { width: 240px; max-width: 100%; }
 .step .phone { margin-bottom: 14px; }
