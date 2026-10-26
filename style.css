@@ -129,16 +129,39 @@ canvas.ascii { position: fixed; inset: 0; width: 100%; height: 100%; z-index: -1
 .grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 48px var(--gap);
+  gap: var(--gap);
   margin-top: 18vh;
 }
+/* the whole tile is the link; its name sits in a frosted box docked top-left, a little lighter on hover */
+.tile { position: relative; display: block; }
 .tile span {
-  display: block;
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: .04em;
-  margin-bottom: 6px;
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 12px;
+  border-radius: 8px;
+  /* frosted glass: a strong blur of the image behind, lightly tinted so the black text reads on dark covers */
+  background: rgba(255, 255, 255, .35);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  color: #000;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.2;
 }
+.tile span::after {
+  content: "";
+  width: 11px;
+  height: 11px;
+  background: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none' stroke='black' stroke-width='2'%3E%3Cpath d='M2 10 10 2M3.5 2H10v6.5'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none' stroke='black' stroke-width='2'%3E%3Cpath d='M2 10 10 2M3.5 2H10v6.5'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+.tile:hover span, .tile:focus-visible span { background: rgba(255, 255, 255, .4); }
 .tile img, .tile video { display: block; width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; background: var(--placeholder); }
 /* logo laid over a tile's video */
 .tile .stack { position: relative; }
