@@ -118,6 +118,10 @@ figure.hero { max-width: 1100px; margin-left: auto; margin-right: auto; }
 }
 .phone canvas { aspect-ratio: 1125 / 2436; }
 
+/* drag-to-rotate wireframe model */
+canvas.wire { display: block; width: 100%; aspect-ratio: 16 / 9; cursor: grab; touch-action: pan-y; }
+canvas.wire:active { cursor: grabbing; }
+
 /* shader breakdown */
 .label {
   font-size: 11px;
