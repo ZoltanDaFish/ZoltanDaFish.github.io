@@ -38,13 +38,14 @@
 
   <figure>
     <h2 class="label">UI shaders</h2>
-    <div class="row narrow" style="--n:2; max-width:760px; align-items:center">
+    <!-- card on the left, the two landscape clips stacked to the same height on the right -->
+    <div class="row" style="grid-template-columns:1.22fr 1fr; max-width:1000px; margin:0 auto; align-items:center">
       <video src="../video/ui-card.mp4" poster="../video/ui-card.jpg" width="640" height="880" autoplay muted loop playsinline preload="metadata" aria-label="Holographic driver card"></video>
-      <video src="../video/ui-rank.mp4" poster="../video/ui-rank.jpg" width="540" height="1098" autoplay muted loop playsinline preload="metadata" aria-label="Animated rank-up background"></video>
+      <div style="display:grid; gap:var(--gap)">
+        <video src="../video/ui-profile.mp4" poster="../video/ui-profile.jpg" width="720" height="630" autoplay muted loop playsinline preload="metadata" aria-label="Iridescent scale pattern on a player profile banner"></video>
+        <video src="../video/ui-ticket.mp4" poster="../video/ui-ticket.jpg" width="720" height="574" autoplay muted loop playsinline preload="metadata" aria-label="Foil ticket with collected rewards"></video>
+      </div>
     </div>
-  </figure>
-  <figure class="hero" style="max-width:900px">
-    <video src="../video/ui-banner.mp4" poster="../video/ui-banner.jpg" width="960" height="674" autoplay muted loop playsinline preload="metadata" aria-label="Iridescent scale pattern on a player banner"></video>
   </figure>
 </main>
 
