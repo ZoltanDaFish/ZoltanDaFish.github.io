@@ -41,6 +41,9 @@
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
+/* always reserve the scrollbar's space, so short pages (About) don't shift the header sideways */
+html { scrollbar-gutter: stable; }
+
 body {
   background: var(--bg);
   color: var(--fg);
@@ -159,6 +162,9 @@ canvas.ascii { position: fixed; inset: 0; width: 100%; height: 100%; z-index: -1
 }
 .intro h1 { font-size: 42px; font-weight: 700; letter-spacing: -.03em; line-height: 1.15; margin-bottom: 18px; }
 .intro p + p { margin-top: 2px; }
+/* store links sit midway between the credits and the first image */
+.intro .stores { margin-top: 48px; }
+.intro:has(.stores) { margin-bottom: 48px; }
 .meta { color: var(--muted); }
 
 /* one spacing rhythm site-wide: --gap between images in a block, 72px between blocks */

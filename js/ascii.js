@@ -357,6 +357,7 @@
     if (e.button !== 0) return;
     rings.push({ x: e.clientX, y: innerHeight - e.clientY, t0: performance.now() });
     if (rings.length > MAX_RINGS) rings.shift();
+    saveRings();
     wake();
   }, { passive: true });
   // the land moves with the page: scrolling just shifts it, layout changes re-measure it
@@ -386,6 +387,18 @@
     });
     document.body.append(pick);
   }
+  // clicking a link loads a new page, which would cut its ripple short; keep the rings in
+  // session storage with wall-clock times and pick them up again on the next page
+  function saveRings() {
+    const off = Date.now() - performance.now();
+    try { sessionStorage.setItem('ascii-rings', JSON.stringify(rings.map(r => [r.x, r.y, r.t0 + off]))); } catch (e) {}
+  }
+  try {
+    const off = Date.now() - performance.now();
+    for (const [x, y, wall] of JSON.parse(sessionStorage.getItem('ascii-rings') || '[]'))
+      if (Date.now() - wall < RING_LIFE * 1000) rings.push({ x, y, t0: wall - off });
+    if (rings.length) wake();
+  } catch (e) {}
   // leaving the window breaks the path, so re-entering elsewhere doesn't draw a streak
   document.addEventListener('pointerout', e => { if (!e.relatedTarget) last = null; });
   addEventListener('resize', resize);
