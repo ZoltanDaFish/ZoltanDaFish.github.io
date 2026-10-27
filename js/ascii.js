@@ -108,6 +108,8 @@
     uniform vec3 color;
     uniform vec4 rings[${MAX_RINGS}];   // centre x, y (CSS px, y up), age (s), unused
     uniform int nRings;
+    uniform vec4 front;                 // theme wave: centre x, y, radius, soft edge (CSS px)
+    uniform vec3 inkOut, inkIn;         // the new and the old background colour
     float hash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
     // height of all click ripples at p: each is a short train of crests riding outward,
     // widening and fading like a stone dropped in a pond
@@ -126,6 +128,19 @@
       vec2 ci = floor(gl_FragCoord.xy / cell);
       vec2 local = (gl_FragCoord.xy - ci * cell) / cell;
       vec2 p = (ci + 0.5) * cell / dpr;
+      // theme switch: while the view transition runs this canvas sits above the page, and a
+      // ragged band of glyphs hides the fade between themes. Ahead of it the new colour eats
+      // into the old page; behind it flecks of the old colour linger on the new one
+      if (front.z > 0.0) {
+        float x = length(p - front.xy) - (front.z - front.w * 0.5) + (hash(ci + 3.1) - 0.5) * front.w * 0.6;
+        float k = 1.0 - abs(x) / front.w;
+        if (k > 0.0) {
+          float g = floor(clamp(k * 0.9 + hash(ci) * 0.15, 0.0, 0.999) * glyphs);
+          float a = texture2D(atlas, vec2((g + local.x) / glyphs, 1.0 - local.y)).a * (0.35 + 0.65 * k);
+          gl_FragColor = vec4((x > 0.0 ? inkOut : inkIn) * a, a);
+          return;
+        }
+      }
       vec2 muv = p / simCss;
       float m = texture2D(land, muv).r;
       // how close the nearest land is: foam gathers in this band
@@ -299,7 +314,7 @@
   // pointer positions in sim texels, y up, with event time for velocity
   const toSim = e => ({ x: e.clientX / SIM, y: (innerHeight - e.clientY) / SIM, t: e.timeStamp });
   const flatPts = new Float32Array(MAX_PTS * 2), flatVels = new Float32Array(MAX_PTS * 2), flatRings = new Float32Array(MAX_RINGS * 4);
-  let color = [0, 0, 0], pending = [], rings = [], last = null, nPts = 0, lastInput = 0, running = false, prevT = 0;
+  let color = [0, 0, 0], wave = null, pending = [], rings = [], last = null, nPts = 0, lastInput = 0, running = false, prevT = 0;
 
   function frame(now) {
     const dt = Math.min(Math.max(now - prevT, 0) / 1000, 1 / 30);
@@ -326,6 +341,13 @@
     pass(dyeP, dye.write, { vel: vel.read.tex, dye: dye.read.tex }, p => gl.uniform1f(p.u('dt'), dt));
     dye.swap();
 
+    // the theme wave follows its animation's eased progress, so the glyphs stay on the CSS edge
+    let waveT = 0;
+    if (wave) {
+      const t = wave.anim.effect.getComputedTiming().progress;
+      if (t == null || wave.anim.playState === 'finished') wave = null; else waveT = t;
+    }
+
     rings = rings.filter(r => now - r.t0 < RING_LIFE * 1000);
     rings.forEach((r, i) => flatRings.set([r.x, r.y, (now - r.t0) / 1000, 0], i * 4));
 
@@ -337,6 +359,8 @@
       gl.uniform1f(p.u('dpr'), dpr);
       gl.uniform4fv(p.u('rings'), flatRings);
       gl.uniform1i(p.u('nRings'), rings.length);
+      gl.uniform4f(p.u('front'), wave ? wave.x : 0, wave ? innerHeight - wave.y : 0, wave ? wave.R * waveT : 0, wave ? wave.soft : 0);
+      if (wave) { gl.uniform3fv(p.u('inkOut'), wave.to); gl.uniform3fv(p.u('inkIn'), wave.from); }
     });
 
     if (now - lastInput < IDLE) requestAnimationFrame(frame);
@@ -367,13 +391,18 @@
   if (document.fonts) document.fonts.ready.then(() => { layoutDirty = true; });
 
   // colour: the --ascii custom property, re-read whenever the tuning picker changes it
+  const rgb = hex => { const n = parseInt(hex.replace('#', ''), 16); return [(n >> 16 & 255) / 255, (n >> 8 & 255) / 255, (n & 255) / 255]; };
   function readColor() {
-    const hex = getComputedStyle(document.documentElement).getPropertyValue('--ascii').trim() || '#a8ff5c';
-    const n = parseInt(hex.replace('#', ''), 16);
-    color = [(n >> 16 & 255) / 255, (n >> 8 & 255) / 255, (n & 255) / 255];
+    color = rgb(getComputedStyle(document.documentElement).getPropertyValue('--ascii').trim() || '#a8ff5c');
   }
   readColor();
   addEventListener('themechange', readColor);
+  // the night mode button's wave (js/theme.js)
+  addEventListener('themewave', e => {
+    const d = e.detail;
+    wave = { x: d.x, y: d.y, R: d.R, soft: d.soft, anim: d.anim, from: rgb(d.from), to: rgb(d.to) };
+    wake();
+  });
   if (new URLSearchParams(location.search).has('tune')) {
     const pick = document.createElement('input');
     pick.type = 'color';
