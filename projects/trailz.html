@@ -7,7 +7,7 @@
 <link rel="icon" href="data:,">
 <link rel="preconnect" href="https://cdn.fontshare.com" crossorigin>
 <script>try{if(localStorage.getItem("theme")==="dark")document.documentElement.dataset.theme="dark"}catch(e){}</script>
-<link rel="stylesheet" href="../style.css?v=118d1608">
+<link rel="stylesheet" href="../style.css?v=9e689b0c">
 </head>
 <body>
 <canvas class="ascii" aria-hidden="true"></canvas>
@@ -140,6 +140,21 @@ vec3 frag(vec2 uv) {
   </figure>
 
   <figure>
+    <h2 class="label">Character cards</h2>
+    <!-- each canvas renders the in-game card live from its textures (see js/cards.js) -->
+    <div class="row cards big" style="--n:2">
+      <div class="card"><canvas data-card="common" data-driver="zigzag" data-amount="20" data-base="../images/trailz/cards/"></canvas><p>Common</p></div>
+      <div class="card"><canvas data-card="mythical" data-driver="goldstein" data-amount="1"></canvas><p>Mythical</p></div>
+    </div>
+    <div class="row cards" style="--n:3">
+      <div class="card"><canvas data-card="rare" data-driver="krod" data-amount="12"></canvas><p>Rare</p></div>
+      <div class="card"><canvas data-card="epic" data-driver="ruby" data-amount="7"></canvas><p>Epic</p></div>
+      <div class="card"><canvas data-card="legendary" data-driver="woolington" data-amount="3"></canvas><p>Legendary</p></div>
+    </div>
+    <figcaption>A holographic shader sampling a different gradient for each rarity. Illustrations by Roy Rachamim.</figcaption>
+  </figure>
+
+  <figure>
     <!-- placeholder from PDF, swap for source -->
     <img src="../images/trailz/licenses.jpg" width="2000" height="1031" alt="Driver license skins" loading="lazy">
     <figcaption>Designed skins and implemented a player bragging feature that lets players show off achievements through collectible driver licenses, handling both the graphic design and the in-engine implementation.</figcaption>
@@ -176,6 +191,7 @@ vec3 frag(vec2 uv) {
 
 <footer class="next"><a href="../">← All work</a><a href="vfx.html">VFX →</a></footer>
 <script src="../js/shaders.js?v=914f250c" defer></script>
+<script src="../js/cards.js?v=e51628b2" defer></script>
 <script src="../js/theme.js?v=129fc5a3" defer></script>
 <script src="../js/ascii.js?v=4d5c533b" defer></script>
 </body>
