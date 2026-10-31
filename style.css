@@ -200,6 +200,8 @@ canvas.ascii { position: fixed; inset: 0; width: 100%; height: 100%; z-index: -1
 .intro .stores { margin-top: 48px; }
 .intro:has(.stores) { margin-bottom: 48px; }
 .meta { color: var(--muted); }
+.meta a { text-decoration: underline; text-underline-offset: 3px; }
+.meta a:hover { color: var(--fg); }
 
 /* one spacing rhythm site-wide: --gap between images in a block, 72px between blocks */
 figure { margin-bottom: 72px; }
