@@ -212,6 +212,9 @@ figcaption {
   font-size: 16px;
   color: var(--muted);
 }
+/* a separate body of work on the same page: double the gap above, caption leads */
+figure.section { margin-top: 144px; }
+figcaption:first-child { margin: 0 auto 28px; }
 
 .row {
   display: grid;
